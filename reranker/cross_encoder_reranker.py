@@ -6,7 +6,7 @@ class CrossEncoderReranker:
     def __init__(self):
 
         self.model = CrossEncoder(
-            "cross-encoder/ms-marco-MiniLM-L-6-v2"
+            "cross-encoder/ms-marco-TinyBERT-L-2-v2"
         )
 
     def rerank(

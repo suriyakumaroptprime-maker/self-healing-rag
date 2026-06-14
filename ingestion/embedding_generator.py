@@ -7,16 +7,26 @@ class EmbeddingGenerator:
 
     def __init__(self):
 
-        self.model = SentenceTransformer(
-            settings.EMBEDDING_MODEL
-        )
+        self.model = None
+
+    def get_model(self):
+
+        if self.model is None:
+
+            self.model = SentenceTransformer(
+                settings.EMBEDDING_MODEL
+            )
+
+        return self.model
 
     def generate_embedding(
         self,
         text: str
     ):
 
-        return self.model.encode(
+        model = self.get_model()
+
+        return model.encode(
             text,
             convert_to_numpy=True
         )
@@ -26,7 +36,9 @@ class EmbeddingGenerator:
         texts: list[str]
     ):
 
-        return self.model.encode(
+        model = self.get_model()
+
+        return model.encode(
             texts,
             convert_to_numpy=True
         )

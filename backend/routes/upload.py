@@ -13,9 +13,20 @@ from backend.services.ingestion_service import (
 
 router = APIRouter()
 
-ingestion_service = (
-    IngestionService()
-)
+ingestion_service = None
+
+
+def get_ingestion_service():
+
+    global ingestion_service
+
+    if ingestion_service is None:
+
+        ingestion_service = (
+            IngestionService()
+        )
+
+    return ingestion_service
 
 
 @router.post("/upload")
@@ -32,6 +43,11 @@ async def upload_document(
             / file.filename
         )
 
+        file_path.parent.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
         contents = await file.read()
 
         with open(
@@ -41,9 +57,12 @@ async def upload_document(
 
             f.write(contents)
 
+        service = (
+            get_ingestion_service()
+        )
+
         result = (
-            ingestion_service
-            .ingest_file(
+            service.ingest_file(
                 str(file_path)
             )
         )
@@ -57,7 +76,10 @@ async def upload_document(
                 file.filename,
 
             "chunks":
-                result["chunks"]
+                result.get(
+                    "chunks",
+                    0
+                )
         }
 
     except Exception as e:

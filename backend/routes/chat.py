@@ -11,7 +11,18 @@ from backend.services.rag_service import (
 
 router = APIRouter()
 
-rag_service = RAGService()
+rag_service = None
+
+
+def get_rag_service():
+
+    global rag_service
+
+    if rag_service is None:
+
+        rag_service = RAGService()
+
+    return rag_service
 
 
 class ChatRequest(
@@ -28,10 +39,10 @@ async def chat(
 
     try:
 
-        return (
-            rag_service.chat(
-                request.query
-            )
+        service = get_rag_service()
+
+        return service.chat(
+            request.query
         )
 
     except Exception as e:
