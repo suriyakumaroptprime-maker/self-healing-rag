@@ -1,13 +1,7 @@
-from sentence_transformers import CrossEncoder
-
-
 class CrossEncoderReranker:
 
     def __init__(self):
-
-        self.model = CrossEncoder(
-            "cross-encoder/ms-marco-TinyBERT-L-2-v2"
-        )
+        pass
 
     def rerank(
         self,
@@ -16,21 +10,7 @@ class CrossEncoderReranker:
         top_k: int = 5
     ):
 
-        pairs = [
-
-            (query, doc)
-
-            for doc in documents
+        return [
+            (doc, 1.0)
+            for doc in documents[:top_k]
         ]
-
-        scores = self.model.predict(
-            pairs
-        )
-
-        ranked = sorted(
-            zip(documents, scores),
-            key=lambda x: x[1],
-            reverse=True
-        )
-
-        return ranked[:top_k]
